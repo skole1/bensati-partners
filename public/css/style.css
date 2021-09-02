@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+:root {
+  --primary-color: #cc2102;
+  --primary-hover-color: #e43618;
+  --bg-color: #333;
+  --box-shadow: 3px 4px 12px rgba(0, 0, 0, 0.7);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body * {
+  font-family: 'Lato', sans-serif;
+  margin: 0;
+}
+
+  ul{
+      font-size: 12px;
+  }
+
+  .bg-coral {
+      background: #cc2102 !important;
+      color: #fff;
+  }
+
+  .btn {
+    background: #cc2102 !important;
+    color: #fff;
+    padding: 0.6rem;
+    border: 1px solid #cc2102;
+    transition: all 0.7s;
+  }
+
+  .btn-dark {
+    background: #333 !important;
+    color: #fff;
+    padding: 0.6rem;
+    border: 1px solid #333;
+    transition: all 0.7s;
+  }
+
+  .btn-red {
+    background: red !important;
+    color: #fff;
+    padding: 0.6rem;
+    border: 1px solid red;
+    transition: all 0.7s;
+  }
+
+  .btn-success {
+    background: green !important;
+    color: #fff;
+    padding: 0.6rem;
+    border: 1px solid green;
+    transition: all 0.7s;
+  }
+  
+  .btn-dark-light {
+    background: #838282 !important;
+    color: #fff;
+    padding: 0.6rem;
+    border: 1px solid #838282;
+    transition: all 0.7s;
+    opacity: o.9;
+  }
+
+  .wrapper {
+    background: url('../img/one.PNG') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+    padding: 1.3rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+.big-font {
+    font-size: 25px !important;
+}
+
+table{
+  background-color: #fff;
+  width: 100%;
+}
+
+table th, table td{
+  padding-top: 08px;
+  padding-bottom: 08px;
+}
+
+.table-bordered{
+  box-shadow: 0px 0px 5px 0.5px black;
+}
+.table-bordered td .table-bordered th{
+  border:  1px solid #333;
+}
+

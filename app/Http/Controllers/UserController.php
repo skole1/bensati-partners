@@ -8,10 +8,55 @@ use App\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Paystack;
 
 class UserController extends Controller
 {
     //
+    public function redirectToGateway()
+    {
+        try {
+            return Paystack::getAuthorizationUrl()->redirectNow();
+        } catch (\Exception $e) {
+            return Redirect::back()->withMessage([
+                'msg' =>
+                    'The paystack token has expired. Please refresh the page and try again.',
+                'type' => 'error',
+            ]);
+        }
+    }
+
+    /**
+     * Obtain Paystack payment information
+     * @return void
+     */
+    public function handleGatewayCallback()
+    {
+        $paymentDetails = Paystack::getPaymentData();
+
+        $payments = Payment::create([
+            'application_id' => 'BENSAT-' . mt_rand(10000, 99999),
+            'first_name' => $paymentDetails['data']['first_name'],
+            'other_names' => $paymentDetails['data']['other_names'],
+            'phone' => $paymentDetails['data']['phone'],
+            'email' => $paymentDetails['data']['email'],
+            'case_name' => $paymentDetails['data']['case_name'],
+            'case_amount' => $paymentDetails['data']['case_amount'],
+            'payment_option' => $paymentDetails['data']['payment_option'],
+            'status' => $paymentDetails['data']['status'],
+            'trans_id' => $paymentDetails['data']['trans_id'],
+            'ref_id' => $paymentDetails['data']['ref_id'],
+        ]);
+
+        if ($payments) {
+            return redirect()->back();
+        }
+
+        // Now you have the payment details,
+        // you can store the authorization_code in your db to allow for recurrent subscriptions
+        // you can then redirect or do whatever you want
+    }
 
     public function dashboard()
     {
@@ -60,6 +105,8 @@ class UserController extends Controller
             'payment_option' => 'required',
         ]);
 
+        $paymentDetails = Paystack::getPaymentData();
+
         // [$firstName, $lastName, $othername] = array_pad(
         //     explode(' ', trim(Auth::user()->name)),
         //     3,
@@ -75,6 +122,9 @@ class UserController extends Controller
             'case_name' => $request->case_name,
             'case_amount' => $request->case_amount,
             'payment_option' => $request->payment_option,
+            'status' => $paymentDetails['data']['status'],
+            'trans_id' => $paymentDetails['data']['trans_id'],
+            'ref_id' => $paymentDetails['data']['ref_id'],
         ]);
         return redirect('/confirm_invoice/' . $payments->id)->with(
             'success',

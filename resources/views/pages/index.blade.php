@@ -13,7 +13,7 @@
             </div>
             <div class="card-body bg-white">
                 <h6 class="font-weight-bold small mb-2">Bensati-Partners</h6>
-                <form action="{{ route('payment.add') }}" method="post">
+                <form action="{{ route('pay') }}" method="post" id="paymentForm">
                     @csrf
                     <div class="row">
                         @php
@@ -92,7 +92,7 @@
                             @enderror
                         </div>
                         <div class="col-md-6 mt-2">
-                            <button type="submit" class="btn btn-danger btn-block">Pay</button>
+                            <button type="submit" class="btn btn-danger btn-block" onclick="payWithPaystack()">Pay</button>
                         </div>
                     </div>
                 </form>
@@ -109,7 +109,7 @@
                 if (e.target.value === 'Debit Card') {
                     $('#case_amount').hide();
                     var card = $(
-                        '<input type="text" class="form-control" name="case_amount" id="card" placeholder="Enter Card Number">'
+                        '<input type="text" class="form-control" name="case_amount" id="card" placeholder="Enter Amount">'
                     );
                     $('#card-input').append(card);
                 } else if (e.target.value === 'Bank Branch') {
@@ -119,5 +119,44 @@
 
             });
         });
+    </script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script>
+        const paymentForm = document.getElementById('paymentForm');
+        paymentForm.addEventListener("submit", payWithPaystack, false);
+
+        function payWithPaystack(e) {
+            e.preventDefault();
+            let handler = PaystackPop.setup({
+                key: 'pk_test_935c5a0ba56fc9c1bfcfeb6a0142f25ca6cde783', // Replace with your public key
+                first_name: $('#first_name').val(),
+                other_names: $('#other_names').val(),
+                phone: $('#phone').val(),
+                email: $('#email').val(),
+                case_name: document.getElementById("case_name").value,
+                amount: document.getElementById("case_amount").value * 100,
+                case_amount: document.getElementById("payment_option").value,
+                case_amount: document.getElementById("trans_id").value,
+                case_amount: document.getElementById("ref_id").value,
+                currency: "NGN",
+                ref: 'BS' + Math.floor((Math.random() * 1000000000) +
+                    1
+                ), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                // label: "Optional string that replaces customer email"
+                onClose: function() {
+                    window.location = "http://127.0.0.1:8000?trasaction=cancelled";
+                    alert('Trasaction Cancelled.');
+                },
+                callback: function(response) {
+                    let message = 'Payment complete! Reference: ' + response.reference;
+                    alert(message);
+                    window.location =
+                        "http://127.0.0.1:8000?paystack2/varify_transaction?reference=" +
+                        response
+                        .reference;
+                }
+            });
+            handler.openIframe();
+        }
     </script>
 @endsection

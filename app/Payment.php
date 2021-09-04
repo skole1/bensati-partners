@@ -17,5 +17,8 @@ class Payment extends Model
         'case_name',
         'case_amount',
         'payment_option',
+        'status',
+        'trans_id',
+        'ref_id',
     ];
 }

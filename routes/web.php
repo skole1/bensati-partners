@@ -29,15 +29,19 @@ Route::post('/register', [UserController::class, 'postRegister'])->name(
 );
 
 Route::get('/payment', [UserController::class, 'payment'])->name('payment');
-Route::post('/payment', [UserController::class, 'postPayment'])->name(
-    'payment.add'
-);
+Route::post('/payment', [UserController::class, 'postPayment'])->name('pay');
+
+Route::get('/payment/callback', [
+    UserController::class,
+    'handleGatewayCallback',
+]);
 
 Route::get('/confirm_invoice/{payment_id}', [
     UserController::class,
     'invoice',
 ])->name('invoice');
 
-Route::get('/generate/{id}', [UserController::class, 'generate'])->name(
-    'generate'
-);
+Route::get('/payment/callback', [
+    UserController::class,
+    'handleGatewayCallback',
+])->name('generate');

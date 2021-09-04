@@ -21,8 +21,11 @@ class CreatePaymentsTable extends Migration
             $table->string('phone');
             $table->string('email');
             $table->string('case_name');
-            $table->string('case_amount');
+            $table->double('amount');
             $table->string('payment_option');
+            $table->string('status');
+            $table->string('trans_id');
+            $table->string('ref_id');
             $table->timestamps();
         });
     }
